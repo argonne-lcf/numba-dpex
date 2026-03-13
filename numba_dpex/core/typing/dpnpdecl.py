@@ -80,7 +80,7 @@ _math_operations = [
     "mod",
     "abs",
     "fabs",
-    "erf",
+    #"erf",
 ]
 
 _trigonometric_functions = [
