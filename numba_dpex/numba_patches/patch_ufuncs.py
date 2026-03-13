@@ -43,12 +43,25 @@ def patch_ufuncs():
     """
     failed_dpnpop_types_lst = []
 
-    op = getattr(dpnp, "erf")
-    op.nin = 1
-    op.nout = 1
-    op.nargs = 2
-    op.types = ["f->f", "d->d"]
-    op.is_dpnp_ufunc = True
+    #op = getattr(dpnp, "erf")
+    #op.nin = 1
+    #op.nout = 1
+    #op.nargs = 2
+    #op.types = ["f->f", "d->d"]
+    #op.is_dpnp_ufunc = True
+    # Newer dpnp builds do not provide erf.
+    # Do not hard-fail import when it is absent.
+    op = getattr(dpnp, "erf", None)
+    if op is not None:
+        op.nin = 1
+        op.nout = 1
+        op.nargs = 2
+        op.types = ["f->f", "d->d"]
+        op.is_dpnp_ufunc = True
+    else:
+        logging.getLogger(__name__).debug(
+            "dpnp has no attribute 'erf'; skipping erf ufunc monkey-patch"
+        )
 
     for ufuncop in dpnpdecl.supported_ufuncs:
         if ufuncop == "erf":
